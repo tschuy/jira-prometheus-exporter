@@ -30,5 +30,10 @@ if __name__ == '__main__':
     logging.info("starting prometheus metrics server")
     start_http_server(8000)
     while True:
-        check_health(os.environ.get('JIRAENDPOINT', 'http://localhost:8080'), os.environ['JIRAUSER'], os.environ['JIRAPASSWORD'])
+        try:
+            check_health(os.environ.get('JIRAENDPOINT', 'http://localhost:8080'), os.environ['JIRAUSER'], os.environ['JIRAPASSWORD'])
+        except Exception as e:
+            g.labels('healthy').set(0)
+            g.labels('unhealthy').set(1)
+            logging.warn(e)
         time.sleep(15)
