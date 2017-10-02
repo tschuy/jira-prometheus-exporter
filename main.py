@@ -19,8 +19,8 @@ def check_health(endpoint, user, password):
 
     health_statuses = [status['isHealthy'] for status in r.json()['statuses']]
 
-    healthy = len([status for status in health_statuses if status == True])
-    unhealthy = len([status for status in health_statuses if status != True])
+    healthy = health_statuses.count(True)
+    unhealthy = health_statuses.count(False)
     g.labels('healthy').set(healthy)
     g.labels('unhealthy').set(unhealthy)
     logging.info("finished updating health ({} healthy, {} unhealthy)".format(healthy, unhealthy))
